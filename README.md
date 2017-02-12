@@ -4,7 +4,12 @@ This is a simple Golang package for reading, manipulating and writing the /etc/n
 
 This package is heavily based on the Python library **Debinterface** [github.com/dggreenbaum/debinterface](https://github.com/dggreenbaum/debinterface "Debinterface github repository").
 
-## Basic usage
+### Installation
+```go
+go get github.com/hilt0n/netif
+```
+
+### Basic usage
 ```go
 package main
 
