@@ -22,15 +22,16 @@ const (
 
 // A representation of a network adapter
 type NetworkAdapter struct {
-	Name		string
-	Auto		bool
-	Address		net.IP
-	Netmask		net.IP
-	Network		net.IP
-	Broadcast	net.IP
-	Gateway		net.IP
-	AddrSource	AddrSource
-	AddrFamily	AddrFamily
+	Name			string
+	Hotplug			bool
+	Auto			bool
+	Address			net.IP
+	Netmask			net.IP
+	Network			net.IP
+	Broadcast		net.IP
+	Gateway			net.IP
+	AddrSource		AddrSource
+	AddrFamily		AddrFamily
 }
 
 type valueValidator struct {
@@ -50,6 +51,46 @@ var valueValidators = map[string]valueValidator {
 	"gateway": 		{Type: "IP"},
 	"addrFam":		{In: []string{"inet", "inet6"}},
 	"source": 		{In: []string{"dhcp", "static", "loopback", "manual"}},
+}
+
+func (na *NetworkAdapter) validateAll() error {
+	/*for k, v := range valueValidators {
+		val := nil
+		
+	}*/
+	return nil
+}
+
+func (na *NetworkAdapter) validateName() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateAddress() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateNetmask() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateNetwork() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateBroadcast() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateGateway() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateAddrFamily() error {
+	return nil
+}
+
+func (na *NetworkAdapter) validateSource() error {
+	return nil
 }
 
 func (na *NetworkAdapter) validateIP(strIP string) (error, net.IP){
@@ -137,6 +178,11 @@ func (na *NetworkAdapter) Print() {
 	fmt.Println("=== Interface ===")
 	fmt.Println("=" + na.Name)
 	fmt.Println("=================")
+	if na.Hotplug {
+		fmt.Println("  hotplug: yes")
+	} else {
+		fmt.Println("  hotplug: no")
+	}
 	if na.Auto {
 		fmt.Println("     auto: yes")
 	} else {

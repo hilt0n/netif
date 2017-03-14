@@ -39,6 +39,39 @@ func (ir *InterfacesReader) ParseInterfaces() []NetworkAdapter {
 	// Treat each line from the file
 	ir.readLinesFromFile(f)
 	
+	return ir.parseInterfacesImplementation()
+}
+
+func (ir *InterfacesReader) parseInterfacesFromString(data string) {
+	// Reset this object in case is not new
+	ir.reset()
+	
+	
+}
+
+func (ir *InterfacesReader) parseInterfacesImplementation() []NetworkAdapter {
+	// Save adapters and return them
+	
+	// foreach iface in the auto list
+	for _, autoName := range ir.autoList {
+		for naIdx, _ := range ir.adapters {
+			if ir.adapters[naIdx].Name == autoName {
+				fmt.Println(ir.adapters[naIdx].Name + " auto")
+				ir.adapters[naIdx].Auto = true
+			}
+		}
+	}
+	
+	// foreach iface in the hotplug list
+	for _, hotplugName := range ir.hotplugList {
+		for naIdx, _ := range ir.adapters {
+			if ir.adapters[naIdx].Name == hotplugName {
+				fmt.Println(ir.adapters[naIdx].Name + " hotplug")
+				ir.adapters[naIdx].Hotplug = true
+			}
+		}
+	}
+	
 	return ir.adapters
 }
 

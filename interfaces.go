@@ -30,3 +30,19 @@ func (i *Interfaces) UpdateAdapters() {
 		adapter.Print()
 	}
 }
+
+func (i *Interfaces) WriteInterfaces() {
+	// Write adapters to interfaces file
+	i.writerFactory().WriteInterfaces()
+}
+
+func (i *Interfaces) writerFactory() *InterfacesWriter{
+	// Create a writer object
+	iw := InterfacesWriter {
+		filePath: i.InterfacesPath,
+		backupPath : "",
+		adapters: i.Adapters,
+	}
+	
+	return &iw
+}
