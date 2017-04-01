@@ -1,48 +1,31 @@
 package netif
 
-import (
-	"fmt"
-)
+import "github.com/n-marshall/fn"
 
-func NewInterfaces() *Interfaces{
-	return &Interfaces{
-		InterfacesPath: "/etc/network/interfaces",
+type InterfaceSet struct {
+	InterfacesReader
+
+	InterfacesPath string
+	Adapters       []NetworkAdapter
+}
+
+func NewInterfaceSet(opts ...fn.Option) *InterfaceSet {
+	fnConfig := fn.MakeConfig(
+		fn.Defaults{"path": "/etc/network/interfaces"},
+		opts,
+	)
+	path := fnConfig.GetString("path")
+
+	return &InterfaceSet{
+		InterfacesPath: path,
 	}
 }
 
-type Interfaces struct {
-	InterfacesReader
-	InterfacesWriter
-	
-	InterfacesPath		string
-	Adapters[]			NetworkAdapter
-}
-
-func (i *Interfaces) Init() {
-	fmt.Println("Init")
-}
-
-func (i *Interfaces) UpdateAdapters() {
+func (i *InterfaceSet) UpdateAdapters() {
 	// (re)read interfaces file and save adapters
 	i.Adapters = NewInterfacesReader(i.InterfacesPath).ParseInterfaces()
 
-	for _, adapter := range i.Adapters {
-		adapter.Print()
-	}
-}
-
-func (i *Interfaces) WriteInterfaces() {
-	// Write adapters to interfaces file
-	i.writerFactory().WriteInterfaces()
-}
-
-func (i *Interfaces) writerFactory() *InterfacesWriter{
-	// Create a writer object
-	iw := InterfacesWriter {
-		filePath: i.InterfacesPath,
-		backupPath : "",
-		adapters: i.Adapters,
-	}
-	
-	return &iw
+	// for _, adapter := range i.Adapters {
+	// 	adapter.Print()
+	// }
 }
