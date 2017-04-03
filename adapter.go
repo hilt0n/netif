@@ -104,10 +104,11 @@ func (na *NetworkAdapter) validateIP(strIP string) (net.IP, error) {
 
 func (na *NetworkAdapter) SetAddress(address string) error {
 	addr, err := na.validateIP(address)
-	if err == nil {
-		na.Address = addr
+	if err != nil {
+		return err
 	}
-	return err
+	na.Address = addr
+	return nil
 }
 
 func (na *NetworkAdapter) SetNetmask(address string) error {

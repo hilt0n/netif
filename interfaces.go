@@ -6,7 +6,7 @@ type InterfaceSet struct {
 	InterfacesReader
 
 	InterfacesPath string
-	Adapters       []NetworkAdapter
+	Adapters       []*NetworkAdapter
 }
 
 func NewInterfaceSet(opts ...fn.Option) *InterfaceSet {

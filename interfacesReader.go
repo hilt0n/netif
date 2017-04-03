@@ -11,7 +11,7 @@ import (
 // TODO get rid of interfaceReader
 type InterfacesReader struct {
 	filePath    string
-	adapters    []NetworkAdapter
+	adapters    []*NetworkAdapter
 	autoList    []string
 	hotplugList []string
 	context     int
@@ -39,7 +39,7 @@ func NewInterfacesReader(filePath string) *InterfacesReader {
 	return &ir
 }
 
-func (ir *InterfacesReader) ParseInterfaces() []NetworkAdapter {
+func (ir *InterfacesReader) ParseInterfaces() []*NetworkAdapter {
 	// Reset this object in case is not new
 	ir.reset()
 
@@ -59,10 +59,9 @@ func (ir *InterfacesReader) ParseInterfaces() []NetworkAdapter {
 func (ir *InterfacesReader) parseInterfacesFromString(data string) {
 	// Reset this object in case is not new
 	ir.reset()
-
 }
 
-func (ir *InterfacesReader) parseInterfacesImplementation() []NetworkAdapter {
+func (ir *InterfacesReader) parseInterfacesImplementation() []*NetworkAdapter {
 	// Save adapters and return them
 
 	// foreach iface in the auto list
@@ -121,7 +120,7 @@ func (ir *InterfacesReader) parseIface(line string) {
 
 	sline := strings.Split(strings.TrimSpace(line), " ")
 
-	ir.adapters = append(ir.adapters, NetworkAdapter{Name: sline[1]})
+	ir.adapters = append(ir.adapters, &NetworkAdapter{Name: sline[1]})
 	ir.context++
 
 	// Parse and set the address source
@@ -145,7 +144,7 @@ func (ir *InterfacesReader) parseDetails(line string) {
 	}
 
 	sline := strings.Split(strings.TrimSpace(line), " ")
-	na := &ir.adapters[ir.context]
+	na := ir.adapters[ir.context]
 
 	switch sline[0] {
 	case "address":
