@@ -21,11 +21,6 @@ func NewInterfaceSet(opts ...fn.Option) *InterfaceSet {
 	}
 }
 
-func (i *InterfaceSet) UpdateAdapters() {
-	// (re)read interfaces file and save adapters
-	i.Adapters = NewInterfacesReader(i.InterfacesPath).ParseInterfaces()
-
-	// for _, adapter := range i.Adapters {
-	// 	adapter.Print()
-	// }
+func Path(path string) fn.Option {
+	return fn.MakeOption("path", path)
 }

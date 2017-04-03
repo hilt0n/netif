@@ -3,10 +3,11 @@ package main
 import ni "github.com/Wifx/netif"
 
 func main() {
-	i := ni.NewInterfaceSet(ni.Path("input"))
-	i.UpdateAdapters()
+	is := ni.Parse(
+		ni.Path("input"),
+	)
 
-	i.Write(
+	is.Write(
 		ni.Path("output"),
 	)
 }

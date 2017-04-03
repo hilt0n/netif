@@ -2,17 +2,34 @@ package netif
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
+
+	"github.com/n-marshall/fn"
 )
 
+// TODO get rid of interfaceReader
 type InterfacesReader struct {
 	filePath    string
 	adapters    []NetworkAdapter
 	autoList    []string
 	hotplugList []string
 	context     int
+}
+
+func Parse(opts ...fn.Option) *InterfaceSet {
+	fnConfig := fn.MakeConfig(
+		fn.Defaults{"path": "/etc/network/interfaces"},
+		opts,
+	)
+	path := fnConfig.GetString("path")
+
+	is := &InterfaceSet{
+		InterfacesPath: path,
+	}
+	is.Adapters = NewInterfacesReader(is.InterfacesPath).ParseInterfaces()
+
+	return is
 }
 
 func NewInterfacesReader(filePath string) *InterfacesReader {
@@ -52,7 +69,6 @@ func (ir *InterfacesReader) parseInterfacesImplementation() []NetworkAdapter {
 	for _, autoName := range ir.autoList {
 		for naIdx, _ := range ir.adapters {
 			if ir.adapters[naIdx].Name == autoName {
-				fmt.Println(ir.adapters[naIdx].Name + " auto")
 				ir.adapters[naIdx].Auto = true
 			}
 		}
@@ -62,7 +78,6 @@ func (ir *InterfacesReader) parseInterfacesImplementation() []NetworkAdapter {
 	for _, hotplugName := range ir.hotplugList {
 		for naIdx, _ := range ir.adapters {
 			if ir.adapters[naIdx].Name == hotplugName {
-				fmt.Println(ir.adapters[naIdx].Name + " hotplug")
 				ir.adapters[naIdx].Hotplug = true
 			}
 		}
