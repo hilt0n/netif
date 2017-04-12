@@ -2,6 +2,7 @@ package netif
 
 import (
 	"errors"
+	"fmt"
 	"net"
 )
 
@@ -143,25 +144,37 @@ func (na *NetworkAdapter) SetNetwork(address string) error {
 	return err
 }
 
-func (na *NetworkAdapter) ParseAddressSource(AddressSource string) (error, AddrSource) {
+func (na *NetworkAdapter) SetConfigType(configType string) error {
+	switch configType {
+	case "DHCP":
+		na.AddrSource = DHCP
+	case "STATIC":
+		na.AddrSource = STATIC
+	default:
+		return fmt.Errorf("unexpected configType: %s", configType)
+	}
+	return nil
+}
+
+func (na *NetworkAdapter) ParseAddressSource(AddressSource string) (AddrSource, error) {
 	// Parse the address source for an interface
 	var src AddrSource
 	switch AddressSource {
-	case "dhcp":
-		src = DHCP
 	case "static":
 		src = STATIC
+	case "dhcp":
+		src = DHCP
 	case "loopback":
 		src = LOOPBACK
 	case "manual":
 		src = MANUAL
 	default:
-		return errors.New("invalid address source"), -1
+		return -1, errors.New("invalid address source")
 	}
-	return nil, src
+	return src, nil
 }
 
-func (na *NetworkAdapter) ParseAddressFamily(AddressFamily string) (error, AddrFamily) {
+func (na *NetworkAdapter) ParseAddressFamily(AddressFamily string) (AddrFamily, error) {
 	// Parse the address family for an interface
 	var fam AddrFamily
 	switch AddressFamily {
@@ -170,8 +183,8 @@ func (na *NetworkAdapter) ParseAddressFamily(AddressFamily string) (error, AddrF
 	case "inet6":
 		fam = INET6
 	default:
-		return errors.New("invalid address family"), -1
+		return -1, errors.New("invalid address family")
 
 	}
-	return nil, fam
+	return fam, nil
 }

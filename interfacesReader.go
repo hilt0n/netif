@@ -124,13 +124,14 @@ func (ir *InterfacesReader) parseIface(line string) {
 	ir.context++
 
 	// Parse and set the address source
-	err, src := ir.adapters[ir.context].ParseAddressSource(sline[len(sline)-1])
-	if err == nil {
-		ir.adapters[ir.context].AddrSource = src
+	src, err := ir.adapters[ir.context].ParseAddressSource(sline[len(sline)-1])
+	if err != nil {
+		panic(err)
 	}
+	ir.adapters[ir.context].AddrSource = src
 
 	// Parse and set the address family
-	err, fam := ir.adapters[ir.context].ParseAddressFamily(sline[2])
+	fam, err := ir.adapters[ir.context].ParseAddressFamily(sline[2])
 	if err == nil {
 		ir.adapters[ir.context].AddrFamily = fam
 	}
