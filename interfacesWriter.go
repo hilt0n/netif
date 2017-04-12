@@ -88,32 +88,42 @@ func (a *NetworkAdapter) writeString() (string, error) {
 
 	lines = append(lines, a.writeAddressFamily())
 
-	for _, line := range a.writeIPLines() {
-		lines = append(lines, line)
+	if a.AddrSource == STATIC || a.AddrSource == MANUAL {
+		for _, line := range a.writeIPLines() {
+			lines = append(lines, line)
+		}
 	}
 
 	return strings.Join(lines, "\n"), nil
 }
 
-func (a *NetworkAdapter) writeAddressFamily() string {
-	var familyStr = "inet"
-	var sourceStr = "dhcp"
+func (a *NetworkAdapter) GetAddrFamilyString() string {
 	switch a.AddrFamily {
 	case INET:
-		familyStr = "inet"
+		return "inet"
 	case INET6:
-		familyStr = "inet6"
+		return "inet6"
 	}
+	return "inet"
+}
+
+func (a *NetworkAdapter) GetSourceFamilyString() string {
 	switch a.AddrSource {
 	case DHCP:
-		sourceStr = "dhcp"
+		return "dhcp"
 	case STATIC:
-		sourceStr = "static"
+		return "static"
 	case LOOPBACK:
-		sourceStr = "loopback"
+		return "loopback"
 	case MANUAL:
-		sourceStr = "manual"
+		return "manual"
 	}
+	return "dhcp"
+}
+
+func (a *NetworkAdapter) writeAddressFamily() string {
+	var familyStr = a.GetAddrFamilyString()
+	var sourceStr = a.GetSourceFamilyString()
 	return fmt.Sprintf("iface %s %s %s", a.Name, familyStr, sourceStr)
 }
 
